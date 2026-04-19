@@ -27,11 +27,136 @@ import {
   ChevronRight,
   Bell,
   Menu,
-  X
+  X,
+  Globe,
+  Zap,
+  Shield,
+  Headphones,
+  ArrowDown,
+  Star,
+  Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // --- Sub-components (could be moved to separate files later) ---
+
+const SupportModal: React.FC<{ 
+  isOpen: boolean; 
+  onClose: () => void; 
+  type: 'CONTACT' | 'PRIVACY' 
+}> = ({ isOpen, onClose, type }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-secondary/80 backdrop-blur-sm"
+        ></motion.div>
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          className="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden relative z-10 p-10 shadow-2xl"
+        >
+          <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-slate-50 rounded-full text-slate-400 hover:text-secondary transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+          
+          {type === 'CONTACT' ? (
+            <div className="space-y-6">
+              <div className="w-16 h-16 rounded-2xl zicta-gradient flex items-center justify-center shadow-lg">
+                <Bell className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-secondary">Get in Touch</h2>
+                <p className="text-slate-500">We're here to support your internship journey.</p>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <UserIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase">Support Email</p>
+                    <p className="text-slate-700 font-semibold">support@zintern.zm</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase">Office Location</p>
+                    <p className="text-slate-700 font-semibold">ZICTA Head Office, Lusaka, Zambia</p>
+                  </div>
+                </div>
+              </div>
+              <button onClick={onClose} className="w-full py-4 zicta-gradient text-white font-bold rounded-2xl shadow-lg shadow-primary/20">
+                Done
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center shadow-sm">
+                <Shield className="w-8 h-8 text-slate-400" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-secondary">Privacy Policy</h2>
+                <p className="text-slate-500">Your data security is our priority.</p>
+              </div>
+              <div className="max-h-60 overflow-y-auto pr-2 text-sm text-slate-600 space-y-4 leading-relaxed font-medium">
+                <p><strong>1. Data Collection:</strong> We collect academic records, CVs, and contact information specifically for internship matching purposes.</p>
+                <p><strong>2. Usage:</strong> Your profile is only visible to registered companies when you apply for their opportunities.</p>
+                <p><strong>3. Protection:</strong> All data is stored securely in compliance with Zambian digital safety standards.</p>
+                <p><strong>4. Consent:</strong> By using ZIntern, you agree to share your academic information with prospective employers and your university administration.</p>
+              </div>
+              <button onClick={onClose} className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl">
+                I Understand
+              </button>
+            </div>
+          )}
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
+
+const BackgroundEffect = () => (
+  <div className="fixed inset-0 -z-10 overflow-hidden bg-white">
+    <motion.div
+      animate={{
+        scale: [1, 1.2, 1],
+        rotate: [0, 90, 0],
+        x: [0, 100, 0],
+        y: [0, 50, 0],
+      }}
+      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px]"
+    />
+    <motion.div
+      animate={{
+        scale: [1, 1.3, 1],
+        rotate: [0, -120, 0],
+        x: [0, -80, 0],
+        y: [0, 100, 0],
+      }}
+      transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+      className="absolute top-[30%] -right-[10%] w-[60%] h-[60%] bg-secondary/5 rounded-full blur-[120px]"
+    />
+    <motion.div
+      animate={{
+        scale: [1, 1.5, 1],
+        x: [0, 50, 0],
+        y: [0, -100, 0],
+      }}
+      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      className="absolute -bottom-[10%] left-[20%] w-[45%] h-[45%] bg-accent/5 rounded-full blur-[100px]"
+    />
+  </div>
+);
 
 const SidebarLink: React.FC<{ 
   icon: React.ReactNode; 
@@ -1102,12 +1227,14 @@ const UniversityDashboard: React.FC<{ activeView: string }> = ({ activeView }) =
   );
 };
 
-// --- Auth Components ---
+// --- Auth & Landing Components ---
 
-const Login = () => {
+const LandingPage = () => {
   const { login } = useApp();
   const [role, setRole] = useState<UserRole>('STUDENT');
   const [email, setEmail] = useState('');
+  const [showSupport, setShowSupport] = useState(false);
+  const [supportType, setSupportType] = useState<'CONTACT' | 'PRIVACY'>('CONTACT');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1115,81 +1242,227 @@ const Login = () => {
   };
 
   const roleOptions: { id: UserRole; label: string; description: string; icon: any }[] = [
-    { id: 'STUDENT', label: 'I am a Student', description: 'Find internships and build your career', icon: GraduationCap },
-    { id: 'COMPANY', label: 'I represent a Company', description: 'Post opportunities and find talent', icon: Building2 },
-    { id: 'UNIVERSITY_ADMIN', label: 'University Partner', description: 'Monitor placements and student success', icon: Building2 },
+    { id: 'STUDENT', label: 'Student', description: 'Unlock your potential', icon: GraduationCap },
+    { id: 'COMPANY', label: 'Company', description: 'Hire Zambia\'s best', icon: Building2 },
+    { id: 'UNIVERSITY_ADMIN', label: 'University', description: 'Track success', icon: Building2 },
+  ];
+
+  const features = [
+    { 
+      title: "Bridging the Gap", 
+      desc: "Connecting academia with industry to ensure every graduate has a path to professional success.",
+      icon: <Globe className="w-6 h-6" />
+    },
+    { 
+      title: "Digital Integration", 
+      desc: "A centralized system for companies, students, and universities to coexist and collaborate efficiently.",
+      icon: <Zap className="w-6 h-6" />
+    },
+    { 
+      title: "Verified Talent", 
+      desc: "Direct verification of academic credentials through university partnerships, ensuring quality matches.",
+      icon: <Shield className="w-6 h-6" />
+    }
+  ];
+
+  const steps = [
+    { id: '01', title: "Register Profile", desc: "Build your academic resume and showcase your skills." },
+    { id: '02', title: "Explore Internships", desc: "Discover verified opportunities from national leaders." },
+    { id: '03', title: "Apply with One-Click", desc: "Track your journey from application to placement." }
   ];
 
   return (
-    <div className="min-h-screen py-12 md:py-20 px-4 bg-slate-50 flex flex-col items-center justify-center">
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }}
-        className="w-full max-w-md bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-primary/5 border border-slate-100"
-      >
-        <div className="text-center mb-10">
-          <div className="w-16 h-16 rounded-2xl zicta-gradient flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary/20">
-            <Briefcase className="w-10 h-10 text-white" />
+    <div className="relative min-h-screen">
+      <BackgroundEffect />
+      
+      {/* Navigation */}
+      <nav className="fixed top-0 inset-x-0 z-50 p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <div className="flex items-center space-x-2">
+          <div className="w-10 h-10 rounded-xl zicta-gradient flex items-center justify-center shadow-lg">
+            <Briefcase className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-3xl font-black text-secondary tracking-tight">Welcome to ZIntern</h2>
-          <p className="text-slate-500 mt-2">Connecting Zambia's future talent with national opportunities.</p>
+          <span className="font-black text-2xl tracking-tight text-secondary">ZIntern</span>
         </div>
+        <div className="hidden md:flex items-center space-x-8">
+          <button onClick={() => { setSupportType('PRIVACY'); setShowSupport(true); }} className="text-sm font-bold text-slate-500 hover:text-primary transition-colors">Privacy</button>
+          <button onClick={() => { setSupportType('CONTACT'); setShowSupport(true); }} className="text-sm font-bold text-slate-500 hover:text-primary transition-colors">Contact</button>
+          <a href="#login" className="px-6 py-2.5 bg-secondary text-white rounded-xl text-sm font-black shadow-lg shadow-secondary/20 hover:scale-105 transition-all">Portal Login</a>
+        </div>
+      </nav>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 gap-4">
-            {roleOptions.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => setRole(opt.id)}
-                className={`flex items-center p-4 rounded-3xl border-2 transition-all text-left ${
-                  role === opt.id 
-                    ? 'border-primary bg-primary/5 shadow-inner' 
-                    : 'border-slate-100 hover:border-slate-200 bg-slate-50'
-                }`}
-              >
-                <div className={`p-3 rounded-2xl mr-4 ${role === opt.id ? 'bg-primary text-white' : 'bg-white text-slate-400'}`}>
-                  <opt.icon className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className={`font-bold ${role === opt.id ? 'text-primary' : 'text-slate-700'}`}>{opt.label}</p>
-                  <p className="text-xs text-slate-500">{opt.description}</p>
-                </div>
-                <div className="ml-auto">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    role === opt.id ? 'border-primary bg-primary' : 'border-slate-200'
-                  }`}>
-                    {role === opt.id && <ChevronRight className="w-4 h-4 text-white" />}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            <div className="relative">
-              <input
-                type="email"
-                placeholder="university@unza.zm or hiring@zicta.zm"
-                className="w-full px-6 py-5 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-primary transition-all text-slate-900 font-medium"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-5 zicta-gradient text-white font-black text-lg rounded-3xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+      <main className="pt-24 pb-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              Access Portal
-            </button>
-          </div>
-        </form>
+              <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full text-primary mb-6">
+                <Star className="w-4 h-4 mr-2" />
+                <span className="text-xs font-black uppercase tracking-widest">Powering Zambia's Digital Future</span>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-black text-secondary leading-[1.1] tracking-tight mb-8">
+                Empowering Zambia's <span className="text-primary italic">Youth</span> with Opportunity.
+              </h1>
+              <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10 max-w-xl">
+                ZIntern is the national digital ecosystem connecting students, companies, and universities 
+                to foster professional growth and national impact.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a href="#login" className="px-10 py-5 zicta-gradient text-white rounded-2xl font-black text-lg shadow-2xl shadow-primary/20 hover:scale-105 active:scale-[0.98] transition-all flex items-center justify-center">
+                  Get Started <ArrowDown className="ml-3 w-5 h-5 animate-bounce" />
+                </a>
+                <button 
+                  onClick={() => { setSupportType('CONTACT'); setShowSupport(true); }}
+                  className="px-10 py-5 bg-white border-2 border-slate-100 text-secondary rounded-2xl font-black text-lg hover:border-primary/20 transition-all flex items-center justify-center shadow-lg shadow-slate-200/50"
+                >
+                  <Headphones className="mr-3 w-5 h-5 text-primary" /> Support Center
+                </button>
+              </div>
+            </motion.div>
 
-        <p className="text-center mt-10 text-slate-400 text-sm">
-          A National Digital Ecosystem Powered by <span className="text-secondary font-bold">Zambia ICT Hub</span>
-        </p>
-      </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              id="login"
+              className="relative"
+            >
+              <div className="absolute -inset-4 bg-white/40 blur-2xl rounded-[3rem] -z-10 animate-pulse"></div>
+              <div className="bg-white p-8 md:p-12 rounded-[3.5rem] shadow-[0_32px_80px_-20px_rgba(0,0,0,0.12)] border border-slate-100">
+                <div className="text-center mb-10">
+                  <h2 className="text-3xl font-black text-secondary">Portal Access</h2>
+                  <p className="text-slate-500 font-bold mt-2">Sign in to your dashboard</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-3 gap-3">
+                    {roleOptions.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setRole(opt.id)}
+                        className={`flex flex-col items-center justify-center p-4 rounded-3xl border-2 transition-all ${
+                          role === opt.id 
+                            ? 'border-primary bg-primary/5 shadow-inner' 
+                            : 'border-slate-50 hover:border-slate-100 bg-slate-50/50'
+                        }`}
+                      >
+                        <div className={`w-10 h-10 rounded-xl mb-2 flex items-center justify-center ${role === opt.id ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-slate-300'}`}>
+                          <opt.icon className="w-5 h-5" />
+                        </div>
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${role === opt.id ? 'text-primary' : 'text-slate-400'}`}>{opt.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-4">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-3xl outline-none focus:border-primary transition-all text-slate-900 font-bold shadow-inner"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="w-full py-5 zicta-gradient text-white font-black text-lg rounded-3xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                      Enter Dashboard
+                    </button>
+                  </div>
+                </form>
+                <div className="mt-8 pt-8 border-t border-slate-50 text-center">
+                  <p className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-loose">
+                    Official Partnership: <br/>
+                    <span className="text-secondary">ZICTA • Ministry of Technology • UNZA</span>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Impact Section */}
+          <div className="mt-32 mb-40">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-black text-secondary mb-4 tracking-tight">Bridging Gaps Across Zambia</h2>
+              <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto">
+                We're solving the systemic challenges in internship matching through automated technology and verified partnerships.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {features.map((f, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 group hover:-translate-y-2 transition-transform duration-500"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-slate-50 text-primary flex items-center justify-center mb-6 group-hover:zicta-gradient group-hover:text-white transition-all duration-500">
+                    {f.icon}
+                  </div>
+                  <h3 className="text-xl font-black text-secondary mb-4">{f.title}</h3>
+                  <p className="text-slate-500 font-medium leading-relaxed">{f.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Simple Steps Section */}
+          <div className="bg-secondary p-12 md:p-20 rounded-[4rem] text-white relative overflow-hidden mb-40">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+            <div className="relative z-10">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-black mb-4">How it works for Students</h2>
+                <p className="text-white/60 font-medium">Your path to a dream internship in 3 simple steps.</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/10 hidden md:block -translate-y-1/2"></div>
+                {steps.map((s, i) => (
+                  <div key={i} className="relative z-10 flex flex-col items-center text-center">
+                    <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center text-2xl font-black mb-6 shadow-xl shadow-primary/30">
+                      {s.id}
+                    </div>
+                    <h3 className="text-xl font-black mb-2">{s.title}</h3>
+                    <p className="text-white/60 font-medium text-sm leading-relaxed">{s.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-100 py-16 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center space-x-2 opacity-50 grayscale hover:grayscale-0 transition-all">
+            <div className="w-8 h-8 rounded-lg zicta-gradient flex items-center justify-center">
+              <Briefcase className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-black text-xl text-secondary">ZIntern</span>
+          </div>
+          <div className="flex items-center space-x-6 text-sm font-bold text-slate-400">
+            <button onClick={() => { setSupportType('CONTACT'); setShowSupport(true); }} className="hover:text-primary transition-colors">Contact Support</button>
+            <button onClick={() => { setSupportType('PRIVACY'); setShowSupport(true); }} className="hover:text-primary transition-colors">Privacy Policy</button>
+            <span>© 2026 ZIntern Portals</span>
+          </div>
+          <p className="text-xs text-slate-300 font-bold flex items-center">
+            Built for National Progress <Check className="ml-2 w-3 h-3 text-green-500" />
+          </p>
+        </div>
+      </footer>
+
+      <SupportModal 
+        isOpen={showSupport} 
+        onClose={() => setShowSupport(false)} 
+        type={supportType} 
+      />
     </div>
   );
 };
@@ -1198,11 +1471,10 @@ const Sidebar: React.FC<{
   isOpen: boolean; 
   onClose: () => void; 
   activeView: string; 
-  onViewChange: (view: string) => void 
-}> = ({ isOpen, onClose, activeView, onViewChange }) => {
+  onViewChange: (view: string) => void;
+  onSupportOpen: (type: 'CONTACT' | 'PRIVACY') => void;
+}> = ({ isOpen, onClose, activeView, onViewChange, onSupportOpen }) => {
   const { user } = useApp();
-  const [showSupportModal, setShowSupportModal] = useState(false);
-  const [supportType, setSupportType] = useState<'CONTACT' | 'PRIVACY'>('CONTACT');
 
   const links = {
     STUDENT: [
@@ -1261,13 +1533,13 @@ const Sidebar: React.FC<{
             <p className="text-xs text-slate-500 relative z-10 mb-4">Need help with our platform?</p>
             <div className="flex flex-col space-y-2 relative z-10">
               <button 
-                onClick={() => { setSupportType('CONTACT'); setShowSupportModal(true); }}
+                onClick={() => { onSupportOpen('CONTACT'); }}
                 className="text-xs font-bold text-primary text-left hover:underline"
               >
                 Contact us
               </button>
               <button 
-                onClick={() => { setSupportType('PRIVACY'); setShowSupportModal(true); }}
+                onClick={() => { onSupportOpen('PRIVACY'); }}
                 className="text-xs font-bold text-slate-400 text-left hover:underline"
               >
                 Privacy Policy
@@ -1276,84 +1548,6 @@ const Sidebar: React.FC<{
           </div>
         </div>
       </aside>
-
-      <AnimatePresence>
-        {showSupportModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-              onClick={() => setShowSupportModal(false)}
-              className="absolute inset-0 bg-secondary/80 backdrop-blur-sm"
-            ></motion.div>
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden relative z-10 p-10 shadow-2xl"
-            >
-              <button onClick={() => setShowSupportModal(false)} className="absolute top-6 right-6 p-2 bg-slate-50 rounded-full text-slate-400 hover:text-secondary transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-              
-              {supportType === 'CONTACT' ? (
-                <div className="space-y-6">
-                  <div className="w-16 h-16 rounded-2xl zicta-gradient flex items-center justify-center shadow-lg">
-                    <Bell className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-secondary">Get in Touch</h2>
-                    <p className="text-slate-500">We're here to support your internship journey.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                        <UserIcon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase">Support Email</p>
-                        <p className="text-slate-700 font-semibold">support@zintern.zm</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                        <Building2 className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase">Office Location</p>
-                        <p className="text-slate-700 font-semibold">ZICTA Head Office, Lusaka, Zambia</p>
-                      </div>
-                    </div>
-                  </div>
-                  <button onClick={() => setShowSupportModal(false)} className="w-full py-4 zicta-gradient text-white font-bold rounded-2xl shadow-lg shadow-primary/20">
-                    Done
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center shadow-sm">
-                    <Search className="w-8 h-8 text-slate-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-secondary">Privacy Policy</h2>
-                    <p className="text-slate-500">Your data security is our priority.</p>
-                  </div>
-                  <div className="max-h-60 overflow-y-auto pr-2 text-sm text-slate-600 space-y-4 leading-relaxed">
-                    <p><strong>1. Data Collection:</strong> We collect academic records, CVs, and contact information specifically for internship matching purposes.</p>
-                    <p><strong>2. Usage:</strong> Your profile is only visible to registered companies when you apply for their opportunities.</p>
-                    <p><strong>3. Protection:</strong> All data is stored securely in compliance with Zambian digital safety standards.</p>
-                    <p><strong>4. Consent:</strong> By using ZIntern, you agree to share your academic information with prospective employers and your university administration.</p>
-                  </div>
-                  <button onClick={() => setShowSupportModal(false)} className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl">
-                    I Understand
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 };
@@ -1362,8 +1556,10 @@ const DashboardContent = () => {
   const { user } = useApp();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('OVERVIEW');
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [supportType, setSupportType] = useState<'CONTACT' | 'PRIVACY'>('CONTACT');
 
-  if (!user) return <Login />;
+  if (!user) return <LandingPage />;
 
   const renderDashboard = () => {
     switch (user.role) {
@@ -1384,6 +1580,7 @@ const DashboardContent = () => {
           onClose={() => setIsSidebarOpen(false)} 
           activeView={activeView}
           onViewChange={(view) => setActiveView(view)}
+          onSupportOpen={(type) => { setSupportType(type); setShowSupportModal(true); }}
         />
 
         {/* Content Area */}
@@ -1403,6 +1600,12 @@ const DashboardContent = () => {
           </div>
         </main>
       </div>
+
+      <SupportModal 
+        isOpen={showSupportModal} 
+        onClose={() => setShowSupportModal(false)} 
+        type={supportType} 
+      />
     </div>
   );
 };
